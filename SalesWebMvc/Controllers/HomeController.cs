@@ -10,7 +10,7 @@ namespace SalesWebMvc.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Index() //ação default
         {
             return View();
         }
