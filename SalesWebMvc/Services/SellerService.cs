@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using SalesWebMvc.Models;
+
+namespace SalesWebMvc.Services
+{
+    public class SellerService
+    {
+        private readonly SalesWebMvcContext _context;
+
+        //injeção de dependência (quando SellerService for criado, receberá uma instância de SalesWebMvcContext)
+        public SellerService(SalesWebMvcContext context)
+        {
+            _context = context;
+        }
+
+        public List<Seller> FindAll()
+        {
+            return _context.Seller.ToList();
+        }
+    }
+}
