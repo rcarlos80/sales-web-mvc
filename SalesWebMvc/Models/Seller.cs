@@ -12,6 +12,7 @@ namespace SalesWebMvc.Models
         public DateTime BirthDate { get; set; }
         public double BaseSalary { get; set; }
         public Department Department { get; set; } //associação Seller x Department (n:1)
+        public int DepartmentId { get; set; } //integridade referencial
         public ICollection<SalesRecord> Sales { get; set; } = new List<SalesRecord>(); //associação Seller x SalesRecord (1:n)
 
         public Seller()
