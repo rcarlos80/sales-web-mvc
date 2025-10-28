@@ -5,23 +5,24 @@ using System.Linq;
 
 namespace SalesWebMvc.Services
 {
-    public class SellerService
+    public class DepartmentService
     {
         private readonly SalesWebMvcContext _context;
 
-        //injeção de dependência (quando SellerService for criado, receberá uma instância de SalesWebMvcContext)
-        public SellerService(SalesWebMvcContext context)
+        //injeção de dependência (quando DepartmentService for criado, receberá uma instância de SalesWebMvcContext)
+        public DepartmentService(SalesWebMvcContext context)
         {
             _context = context;
         }
 
-        public List<Seller> FindAll()
+        public List<Department> FindAll()
         {
-            return _context.Seller.ToList();
+            return _context.Department.OrderBy(x => x.Name).ToList();
         }
 
         public void Insert(Seller obj)
         {
+            obj.Department = _context.Department.First();
             _context.Add(obj);
             _context.SaveChanges();
         }
