@@ -39,7 +39,7 @@ namespace SalesWebMvc.Controllers
             return RedirectToAction(nameof(Index)); //nameof p/ caso o nome da ação "Index()" seja alterado, mantenha o Redirect funcionando
         }
 
-        public IActionResult Delete (int? id)
+        public IActionResult Delete (int? id) //GET
         {
             if (id == null)
             {
@@ -62,5 +62,23 @@ namespace SalesWebMvc.Controllers
             _sellerService.Remove(id);
             return RedirectToAction(nameof(Index)); //nameof p/ caso o nome da ação "Index()" seja alterado, mantenha o Redirect funcionando
         }
+
+        public IActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var obj = _sellerService.FindById(id.Value);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+
+            return View(obj);
+        }
+
+
     }
 }
