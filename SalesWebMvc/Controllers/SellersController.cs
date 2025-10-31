@@ -34,10 +34,16 @@ namespace SalesWebMvc.Controllers
             return View(viewModel);
         }
 
-        [HttpPost] //indica um método POST, não GET
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Seller seller)
+        public IActionResult Create(Seller seller) //POST
         {
+            if (!ModelState.IsValid) //testa se o modelo foi validado / previne comportamento indevido se o JS estiver desabilitado no client
+            {
+                var departments = _departmentService.FindAll();
+                var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
+                return View(viewModel);
+            }
             _sellerService.Insert(seller);
             return RedirectToAction(nameof(Index)); //nameof p/ caso o nome da ação "Index()" seja alterado, mantenha o Redirect funcionando
         }
@@ -60,7 +66,7 @@ namespace SalesWebMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int id) //POST
         {
             _sellerService.Remove(id);
             return RedirectToAction(nameof(Index)); //nameof p/ caso o nome da ação "Index()" seja alterado, mantenha o Redirect funcionando
@@ -102,8 +108,14 @@ namespace SalesWebMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Seller seller)
+        public IActionResult Edit(int id, Seller seller) //POST
         {
+            if (!ModelState.IsValid)
+            {
+                var departments = _departmentService.FindAll();
+                var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
+                return View(viewModel);
+            }
             if (id != seller.Id)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id mismatch" });
