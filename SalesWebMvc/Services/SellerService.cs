@@ -1,10 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SalesWebMvc.Models;
 using SalesWebMvc.Services.Exceptions;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SalesWebMvc.Services
 {
@@ -37,9 +37,16 @@ namespace SalesWebMvc.Services
 
         public async Task RemoveAsync(int id)
         {
-            var obj = await _context.Seller.FindAsync(id);
-            _context.Seller.Remove(obj);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var obj = await _context.Seller.FindAsync(id);
+                _context.Seller.Remove(obj);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException e) //exeção do Entity
+            {
+                throw new IntegrityException("Can't delete seller because he/she has sales"); //nível de serviço
+            }
         }
 
         public async Task UpdateAsync(Seller obj)
@@ -51,10 +58,10 @@ namespace SalesWebMvc.Services
             }
             try
             {
-            _context.Update(obj);
-            await _context.SaveChangesAsync();
+                _context.Update(obj);
+                await _context.SaveChangesAsync();
             }
-            catch(DbUpdateConcurrencyException e) //intercepta a exceção da camada de acesso a dados...
+            catch (DbUpdateConcurrencyException e) //intercepta a exceção da camada de acesso a dados...
             {
                 throw new DbConcurrencyException(e.Message); //...e relança no nível da própria camada (Serviço), sem propagar
             }
